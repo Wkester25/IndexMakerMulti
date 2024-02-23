@@ -25,6 +25,24 @@ public class SearchThread implements Runnable{
         int index = foundOrInserted(word);
         if(index != -1) {
             result.get(index).addLocation(num);
+            if(SearchContainer.mostFrequentWords.isEmpty() || result.get(index).getNumLocations() > SearchContainer.mostFrequentWords.get(0).getNumLocations()) {
+                SearchContainer.mostFrequentWords.clear();
+                SearchContainer.mostFrequentWords.add(result.get(index));
+            }
+            else if(result.get(index).getNumLocations() == SearchContainer.mostFrequentWords.get(0).getNumLocations()) {
+                if(bianarySearch(word, SearchContainer.mostFrequentWords) == -1){
+                    SearchContainer.mostFrequentWords.add(result.get(index));
+                }
+            }
+            if(SearchContainer.leastFrequentWords.isEmpty() || result.get(index).getNumLocations() < SearchContainer.leastFrequentWords.get(0).getNumLocations()) {
+                SearchContainer.leastFrequentWords.clear();
+                SearchContainer.leastFrequentWords.add(result.get(index));
+            }
+            else if(result.get(index).getNumLocations() == SearchContainer.leastFrequentWords.get(0).getNumLocations()) {
+                if(bianarySearch(word, SearchContainer.leastFrequentWords) == -1){
+                    SearchContainer.leastFrequentWords.add(result.get(index));
+                }
+            }
         }
         SearchContainer.numWords++;
     }
@@ -32,16 +50,15 @@ public class SearchThread implements Runnable{
     public void addAllWords(String str, int num) {
         String[] words = str.split("\\W+");
         for (String word : words) {
-            if(word.length() > SearchContainer.longestWord.length() && !word.isEmpty()) {
-                SearchContainer.longestWord = word;
-            }
-            if((word.length() < SearchContainer.shortestWord.length() || SearchContainer.shortestWord.isEmpty()) && !word.isEmpty()) {
-                System.out.println(SearchContainer.shortestWord);
-                SearchContainer.shortestWord = word;
-            }
             if (!word.isEmpty()) {
                 addWord(word, num);
-
+                if(word.length() > SearchContainer.longestWord.length()) {
+                    SearchContainer.longestWord = word;
+                }
+                if(word.length() < SearchContainer.shortestWord.length() || SearchContainer.shortestWord.isEmpty()) {
+                    System.out.println(SearchContainer.shortestWord);
+                    SearchContainer.shortestWord = word;
+                }
             }
         }
     }
@@ -93,6 +110,23 @@ public class SearchThread implements Runnable{
         }
         SearchContainer.addIndex(new wordElement(word.toUpperCase()), low);
         return low;
+    }
+
+    private int bianarySearch(String word, ArrayList<wordElement> result) {
+        int low = 0;
+        int high = result.size() - 1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int compare = result.get(mid).getWord().compareToIgnoreCase(word);
+            if (compare == 0) {
+                return mid;
+            } else if (compare < 0) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return -1;
     }
 
 

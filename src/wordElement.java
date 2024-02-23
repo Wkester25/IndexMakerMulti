@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class wordElement {
-    public String word;
+    public final String word;
     private ArrayList<Integer> locations;
 
     public wordElement(String word, int location) {
@@ -34,6 +34,10 @@ public class wordElement {
     public boolean equals(Object obj) {
             wordElement e = (wordElement) obj;
             return this.word.equals(e.word);
+    }
+
+    public int getNumLocations() {
+        return this.locations.size();
     }
 
 }

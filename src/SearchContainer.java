@@ -10,7 +10,8 @@ public class SearchContainer {
     public static volatile String shortestWord = "";
     public static volatile String longestWord = "";
     public static volatile int numIndexes = 0;
-
+    public static volatile ArrayList<wordElement> mostFrequentWords = new ArrayList<wordElement>();
+    public static volatile ArrayList<wordElement> leastFrequentWords = new ArrayList<wordElement>();
     public static void main(String[] args) throws InterruptedException, IOException {
         Scanner keyboard = new Scanner(System.in);
         System.out.print("\nEnter input file name: ");
@@ -37,6 +38,16 @@ public class SearchContainer {
         outputFile.println("Number of indexes: " + numIndexes);
         outputFile.println("Shortest word: " + shortestWord);
         outputFile.println("Longest word: " + longestWord);
+        outputFile.print("Most frequent word: ");
+        for (wordElement word : mostFrequentWords) {
+            outputFile.print(word.word + " ");
+        }
+        outputFile.println();
+        outputFile.print("Least frequent word: ");
+        for (wordElement word : leastFrequentWords) {
+            outputFile.print(word.word + " ");
+        }
+        outputFile.println();
         outputFile.println("Time: " + (endTime - startTime) + "ms");
         outputFile.println("Number of threads: " + numThreads);
         for (wordElement word : result) {
