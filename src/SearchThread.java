@@ -32,10 +32,11 @@ public class SearchThread implements Runnable{
     public void addAllWords(String str, int num) {
         String[] words = str.split("\\W+");
         for (String word : words) {
-            if(word.length() > SearchContainer.longestWord.length()) {
+            if(word.length() > SearchContainer.longestWord.length() && !word.isEmpty()) {
                 SearchContainer.longestWord = word;
             }
-            if(word.length() < SearchContainer.shortestWord.length() || SearchContainer.shortestWord.isEmpty()) {
+            if((word.length() < SearchContainer.shortestWord.length() || SearchContainer.shortestWord.isEmpty()) && !word.isEmpty()) {
+                System.out.println(SearchContainer.shortestWord);
                 SearchContainer.shortestWord = word;
             }
             if (!word.isEmpty()) {
@@ -74,6 +75,8 @@ public class SearchThread implements Runnable{
         return -1;
     }
 
+
+
     private int insertAlphabeticallyBinary(String word) {
         int low = 0;
         int high = result.size() - 1;
@@ -88,8 +91,7 @@ public class SearchThread implements Runnable{
                 high = mid - 1;
             }
         }
-        result.add(low, new wordElement(word));
-        SearchContainer.numIndexes++;
+        SearchContainer.addIndex(new wordElement(word.toUpperCase()), low);
         return low;
     }
 

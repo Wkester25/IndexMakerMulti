@@ -25,7 +25,8 @@ public class SearchContainer {
         while (scanner.hasNextLine()) {
             list.add(scanner.nextLine());
         }
-        startThreads(1, list);
+        int numThreads = Runtime.getRuntime().availableProcessors();
+        startThreads(numThreads, list);
         for (Thread thread : threads) {
             thread.join();
         }
@@ -37,11 +38,12 @@ public class SearchContainer {
         outputFile.println("Shortest word: " + shortestWord);
         outputFile.println("Longest word: " + longestWord);
         outputFile.println("Time: " + (endTime - startTime) + "ms");
+        outputFile.println("Number of threads: " + numThreads);
         for (wordElement word : result) {
-            System.out.println(word);
             outputFile.println(word);
         }
         outputFile.close();
+        System.out.println("number of words: " + numWords);
 
     }
 
@@ -50,6 +52,13 @@ public class SearchContainer {
             Thread thread = new Thread(new SearchThread(i, numThreads, list));
             threads.add(thread);
             thread.start();
+            thread.join();
         }
+
+    }
+
+    public static void addIndex(wordElement word, int location) {
+        result.add(location, word);
+        numIndexes++;
     }
 }
